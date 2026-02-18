@@ -1,20 +1,12 @@
 import express from "express";
 import fetch from "node-fetch";
-import path from "path";
-import dotenv from "dotenv";
 import cors from "cors";
-import { fileURLToPath } from "url";
+import serverless from "serverless-http";
 
-dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/models", async (req, res) => {
   try {
@@ -42,22 +34,19 @@ app.post("/api/chat", async (req, res) => {
   const { messages, model } = req.body;
 
   try {
-    const response = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages,
-          model,
-          temperature: 0.7,
-          max_tokens: 8000,
-        }),
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        messages,
+        model,
+        temperature: 0.7,
+        max_tokens: 8000,
+      }),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -74,10 +63,4 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-app.listen(PORT, () =>
-  console.log(`✅ Server running on http://localhost:${PORT}`),
-);
+export const handler = serverless(app);

@@ -1,18 +1,23 @@
 {
-  "name": "chatbot-express",
+  "name": "groq-chat",
   "version": "1.0.0",
-  "type": "module",
+  "main": "netlify/functions/api.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "netlify dev",
+    "start": "netlify dev",
+    "build": "echo Building..."
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "dotenv": "^16.3.1",
     "cors": "^2.8.5",
-    "node-fetch": "^3.3.2"
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "clean-css": "^5.3.3",
+    "fs-extra": "^11.2.0",
+    "html-minifier-terser": "^7.2.0",
+    "javascript-obfuscator": "^4.1.1",
+    "netlify-cli": "^17.0.0"
   }
 }
